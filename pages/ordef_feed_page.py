@@ -12,11 +12,14 @@ class OrderFeedPage(BasePage):
         super().__init__(driver)
         self.locators = OrderFeedPageLocators()
 
+
     @staticmethod
+    @allure.step("Получаем номер заказа пользователя")
     def get_user_order_locator(order_number):
         locator = (By.XPATH, f'.//ul[@class="OrderFeed_list__OLh59"]/li/a/div/p[text()="#0{order_number}"]')
         return locator
 
+    @allure.step("Ожидаем появления заголовка 'Лента заказов'")
     def wait_for_order_header_visible(self):
         self.wait_for_element_visible(self.locators.order_header)
 
@@ -24,12 +27,15 @@ class OrderFeedPage(BasePage):
     def click_on_order(self):
         self.click_on(self.locators.first_in_list_oder)
 
+    @allure.step("Ожидаем когда первый заказ в ленте станет кликабельным")
     def wait_for_order_is_clickable(self):
         self.wait_for_element_clickable(self.locators.first_in_list_oder)
 
+    @allure.step("Ожидаем появления попапа с информацией о заказе")
     def wait_for_order_popup_visible(self):
         self.wait_for_element_visible(self.locators.order_popup)
 
+    @allure.step("Подтверждаем видимость попапа с информацией о заказе")
     def order_popup_is_displayed(self):
         return self.element_is_displayed(self.locators.order_popup)
 
@@ -37,6 +43,7 @@ class OrderFeedPage(BasePage):
     def scroll_to_user_order(self, locator):
         self.scroll_to_element(locator)
 
+    @allure.step("Подтверждаем видимость заказа пользователя")
     def user_order_is_displayed(self, locator):
         return  self.element_is_displayed(locator)
 
@@ -44,6 +51,7 @@ class OrderFeedPage(BasePage):
     def get_all_time_counter_value(self):
         return self.get_text_of_element(self.locators.all_time_counter)
 
+    @allure.step("Ожидаем появления каунтера 'Выполнено за все время'")
     def wait_for_all_time_counter_visible(self):
         self.wait_for_element_visible(self.locators.all_time_counter)
 
@@ -51,12 +59,15 @@ class OrderFeedPage(BasePage):
     def get_today_counter_value(self):
         return self.get_text_of_element(self.locators.today_counter)
 
+    @allure.step("Ожидаем появления каунтера 'Выполнено за сегодня'")
     def wait_for_today_counter_visible(self):
         self.wait_for_element_visible(self.locators.today_counter)
 
+    @allure.step("Ожидаем появления заказа в листе 'В работе'")
     def wait_for_in_progress_order_visible(self):
         self.wait_for_element_visible(self.locators.in_progress_order)
 
+    @allure.step("Получаем номер заказа из листа 'В работе'")
     def get_number_of_in_progress_order(self):
         return  self.get_text_of_element(self.locators.in_progress_order)
 

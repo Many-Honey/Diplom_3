@@ -29,5 +29,6 @@ class LoginPage(BasePage):
     def click_on_login_button(self):
         self.click_on(self.locators.login_button)
 
+    @allure.step("Ожидаем появления заголовка 'Вход'")
     def wait_for_login_header_visible(self):
         self.wait_for_element_visible(self.locators.login_header)

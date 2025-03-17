@@ -15,7 +15,7 @@ class TestOrderFeed:
         feed_page.click_on_order()
         feed_page.wait_for_order_popup_visible()
 
-        assert feed_page.order_popup_is_displayed() == True
+        assert feed_page.order_popup_is_displayed()
 
     @allure.title('Заказы из раздела «История заказов» отображаются на странице «Лента заказов»')
     def test_users_order_is_displayed_in_order_feed(self,driver, make_order):
@@ -26,11 +26,12 @@ class TestOrderFeed:
         user_order = feed_page.get_user_order_locator(number)
         feed_page.scroll_to_user_order(user_order)
 
-        assert feed_page.user_order_is_displayed(user_order) == True
+        assert feed_page.user_order_is_displayed(user_order)
 
     @allure.title('При создании нового заказа счётчик "Выполнено за всё время" увеличивается')
     def test_after_make_order_all_time_completed_counter_increased(self, driver, user_login):
         main_page = MainPage(driver)
+        main_page.wait_for_constructor_header_visible()
         main_page.click_on_order_feed_button()
         feed_page = OrderFeedPage(driver)
         feed_page.wait_for_all_time_counter_visible()
@@ -53,6 +54,7 @@ class TestOrderFeed:
     @allure.title('При создании нового заказа счётчик "Выполнено за день" увеличивается')
     def test_after_make_order_today_completed_counter_increased(self, driver, user_login):
         main_page = MainPage(driver)
+        main_page.wait_for_constructor_header_visible()
         main_page.click_on_order_feed_button()
         feed_page = OrderFeedPage(driver)
         feed_page.wait_for_today_counter_visible()

@@ -1,25 +1,11 @@
 import random
 import pytest
 import requests
-from selenium import webdriver
+
 from helpers import GenerateUserData
 from pages.login_page import LoginPage
 from urls import Urls
-
-
-class WebdriverFactory:
-    """Фабрика для создания WebDriver на основе переданного имени браузера."""
-
-    @staticmethod
-    def get_webdriver(browser_name):
-        """Метод создает и возвращает WebDriver для указанного браузера."""
-        if browser_name == "firefox":
-            return webdriver.Firefox()
-        elif browser_name == "chrome":
-            return webdriver.Chrome()
-        else:
-            raise ValueError(f"Unsupported browser: {browser_name}")
-
+from webdriver_factory import WebdriverFactory
 
 def pytest_addoption(parser):
     """
@@ -27,7 +13,6 @@ def pytest_addoption(parser):
     По умолчанию используется Chrome.
     """
     parser.addoption("--browser", action="store", default="chrome", help="Browser to run tests on")
-
 
 @pytest.fixture
 def driver(request):
@@ -42,8 +27,6 @@ def driver(request):
     yield driver  # Передаем WebDriver в тест
     driver.quit()  # Закрываем браузер после завершения теста`
 
-
-
 @pytest.fixture
 def user_registration():
     payload = {"email": GenerateUserData.email,
@@ -55,9 +38,7 @@ def user_registration():
     r = response_reg.json()
     access_token = r.get("accessToken")
     headers = {"Authorization": f"Bearer{access_token}"}
-    # удаляем созданного ранее пользователя
-    response_delete = requests.delete(Urls.api_user_url, headers=headers)
-    print(response_delete.text)
+    requests.delete(Urls.api_user_url, headers=headers)
 
 @pytest.fixture
 def user_login(user_registration, driver):
@@ -86,22 +67,17 @@ def order_request_body():
 
 
 @pytest.fixture
-def login_user_api():
-    payload = {"email": GenerateUserData.email,
-               "password": GenerateUserData.password,
-               "name": GenerateUserData.name}
-    requests.post(Urls.api_register_url, payload)
+def login_user_api(user_registration):
     payload_login = {
-        "email": payload.get("email"),
-        "password": payload.get("password")
+        "email": user_registration.get("email"),
+        "password": user_registration.get("password")
     }
     response_login = requests.post(Urls.api_login_url, data=payload_login)
     r = response_login.json()
     access_token = r.get("accessToken")
     headers = {"Authorization": f"Bearer{access_token}"}
     yield headers
-    response_delete = requests.delete(Urls.api_user_url, headers=headers)
-    print(response_delete.text)
+    requests.delete(Urls.api_user_url, headers=headers)
 
 @pytest.fixture
 def make_order(login_user_api, driver, order_request_body):
@@ -109,5 +85,4 @@ def make_order(login_user_api, driver, order_request_body):
     payload_order = order_request_body
     response_order = requests.post(Urls.api_order_url, data=payload_order, headers=headers)
     order_number = response_order.json()["order"]["number"]
-    print(order_number)
     return order_number

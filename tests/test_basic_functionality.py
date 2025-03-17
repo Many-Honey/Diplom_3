@@ -35,7 +35,7 @@ class TestBasicFunctionality:
         main_page.open_page(Urls.base_url)
         main_page.click_on_bun()
 
-        assert main_page.ingredient_detail_header_is_displayed() == True
+        assert main_page.ingredient_detail_header_is_displayed()
 
     @allure.title('Всплывающее окно с деталями закрывается кликом по крестику')
     def test_click_on_close_button_close_window_with_details(self, driver):
@@ -44,7 +44,7 @@ class TestBasicFunctionality:
         main_page.click_on_bun()
         main_page.wait_for_ingredient_detail_header_visible()
         main_page.click_on_close_button()
-        main_page.wait_for_user_profile_button_invisibility()
+        main_page.wait_for_ingredient_detail_header_invisibility()
 
         assert main_page.ingredient_detail_header_is_displayed() == False
 
@@ -64,8 +64,9 @@ class TestBasicFunctionality:
         main_page.drag_and_drop_bun()
         main_page.drag_and_drop_sauce()
         main_page.click_on_make_order_button()
+        main_page.wait_for_order_id_text_is_visible()
 
-        assert main_page.order_id_text_is_displayed() == True
+        assert main_page.order_id_text_is_displayed()
 
 
 

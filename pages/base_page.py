@@ -1,4 +1,3 @@
-import time
 import allure
 from selenium.webdriver.support import expected_conditions
 from selenium.webdriver.support.wait import WebDriverWait
@@ -24,12 +23,10 @@ class BasePage:
 
     def scroll_to_element(self, locator):
         element = self.driver.find_element(*locator)
-        time.sleep(2)
         self.driver.execute_script("arguments[0].scrollIntoView();", element)
 
     def click_on(self, locator):
         element = self.driver.find_element(*locator)
-        time.sleep(2)
         self.driver.execute_script("arguments[0].click();", element)
 
     def fill_the_field(self, field_name, user_input):
